@@ -1,0 +1,82 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class MainFrame {
+    + MainFrame()
+}
+
+class TrafficPanel {
+    - SimulationManager simulationManager
+    + TrafficPanel(SimulationManager simulationManager)
+    + void refresh()
+}
+
+class InfoPanel {
+    - SimulationManager simulationManager
+    + InfoPanel(SimulationManager simulationManager)
+    + void updateInfo()
+}
+
+class SimulationManager {
+    - ClockThread clockThread
+    - List<TrafficLightThread> trafficLights
+    - List<CarThread> cars
+    + SimulationManager()
+    + void startSimulation()
+    + void pauseSimulation()
+    + void stopSimulation()
+    + void addCar()
+    + ClockThread getClockThread()
+    + List<TrafficLightThread> getTrafficLights()
+    + List<CarThread> getCars()
+}
+
+class ClockThread {
+    - int currentTime
+    - boolean running
+    - boolean paused
+    + ClockThread()
+    + void run()
+    + int getCurrentTime()
+    + void pause()
+    + void resumeClock()
+    + void stopThread()
+}
+
+class TrafficLightThread {
+    - String intersection
+    - String state
+    - boolean running
+    - boolean paused
+    + TrafficLightThread(String intersection)
+    + void run()
+    + String getLightState()
+    + void pause()
+    + void resumeLight()
+    + void stopThread()
+}
+
+class CarThread {
+    - String carName
+    - int speed
+    - int position
+    - TrafficLightThread trafficLight
+    - boolean running
+    - boolean paused
+    + CarThread(String carName, TrafficLightThread trafficLight)
+    + void run()
+    + int getPosition()
+    + int getSpeed()
+    + void pause()
+    + void resumeCar()
+    + void stopThread()
+}
+
+MainFrame --> TrafficPanel : "aggregates"
+MainFrame --> InfoPanel : "aggregates"
+MainFrame --> SimulationManager : "uses"
+SimulationManager --> ClockThread : "manages"
+SimulationManager --> TrafficLightThread : "manages multiple"
+SimulationManager --> CarThread : "manages multiple"
+CarThread --> TrafficLightThread : "depends on"
+@enduml
